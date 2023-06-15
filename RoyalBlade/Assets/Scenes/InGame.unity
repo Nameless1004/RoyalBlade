@@ -3966,8 +3966,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 4665804335351608810, guid: d5c16c41e7b70f149a620a2c454542e0, type: 3}
-  spawnTimeInterval: 3
-  spawnPosition: {x: 0, y: 30}
+  spawnTimeInterval: 5
+  spawnPosition: {x: 0, y: 50}
 --- !u!4 &1604083150
 Transform:
   m_ObjectHideFlags: 0
