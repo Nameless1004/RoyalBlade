@@ -29,6 +29,12 @@ public class Health : MonoBehaviour, ITakeDamageable
         OnHealthChanged?.Invoke(_ratio);
     }
 
+    public void SetMaxHp(int maxHp)
+    {
+        MaxHp = maxHp;
+        _currentHp = maxHp;
+    }
+
     public void TakeDamage(int damage)
     {
         _currentHp = Mathf.Clamp(_currentHp - damage, 0, MaxHp);

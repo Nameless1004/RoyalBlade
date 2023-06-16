@@ -17,13 +17,16 @@ public class Pet : MonoBehaviour
     ObjectPool<Bullet> _bulletPool;
     public Transform BulletObjectPool;
     [SerializeField]
+    private float _bulletSpawnIntervalPerSecond;
     private float _bulletSpawnInterval;
     private float _elapsedTime;
+
 
     private void Awake()
     {
         transform.position = Owner.transform.position + (Vector3)OffSetPosition;
         _bulletPool = new ObjectPool<Bullet>(CreateFunc, ActionOnGet, ActionOnRelease, null);
+        _bulletSpawnInterval = 1 / (float)_bulletSpawnIntervalPerSecond;
     }
 
     private void OnEnable()
@@ -64,7 +67,8 @@ public class Pet : MonoBehaviour
         Vector3 ownerPos = Owner.transform.position;
         ownerPos.y += 50f;
         Vector3 dir = ownerPos - transform.position;
-        bullet.SetBullet(_bulletPool, transform.position, dir.normalized, 30f, BonusAttack);
+        int damage = Random.Range(1, BonusAttack + 1);
+        bullet.SetBullet(_bulletPool, transform.position, dir.normalized, 30f, damage);
         bullet.Fire();
     }
 

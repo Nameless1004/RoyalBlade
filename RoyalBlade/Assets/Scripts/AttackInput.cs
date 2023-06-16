@@ -1,11 +1,11 @@
 using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class AttackInput : CustomInput
 {
+    [SerializeField] private ParticleSystem[] _ultGuageFullParticles;
     [SerializeField] private Image _attackUltBackground;
     [SerializeField] private Button _ultButton;
     [SerializeField] private Image _ultButtonImage;
@@ -33,6 +33,10 @@ public class AttackInput : CustomInput
 
         if (CurrentSuccessAttackCount == MaxSuccessAttackCount)
         {
+            foreach(var particle in _ultGuageFullParticles)
+            {
+                particle.Play();
+            }
             _ultButton.interactable = true;
             IsGuageFull = true;
         }
@@ -47,6 +51,11 @@ public class AttackInput : CustomInput
         IsGuageFull = false;
         _ultButton.interactable = false;
         _ultButtonImage.fillAmount = 0;
+
+        foreach (var particle in _ultGuageFullParticles)
+        {
+            particle.Stop();
+        }
     }
 
     public async UniTaskVoid FadeInUltBackGround()
@@ -60,7 +69,7 @@ public class AttackInput : CustomInput
             elapsedTime += Time.deltaTime;
             color.a = Mathf.Lerp(0, 1, elapsedTime / 1f);
             _attackUltBackground.color = color;
-            await UniTask.Yield();
+            await UniTask.Yield(this.GetCancellationTokenOnDestroy());
         }
         await UniTask.Delay(4000);
         FadeOutUltBackGround().Forget();
@@ -76,7 +85,7 @@ public class AttackInput : CustomInput
             elapsedTime += Time.deltaTime;
             color.a = Mathf.Lerp(1, 0, elapsedTime / 1f);
             _attackUltBackground.color = color;
-            await UniTask.Yield();
+            await UniTask.Yield(this.GetCancellationTokenOnDestroy());
         }
         _attackUltBackground.gameObject.SetActive(false);
     }

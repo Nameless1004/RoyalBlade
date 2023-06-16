@@ -40,7 +40,7 @@ public class WallStackPooler : MonoBehaviour
                 elapsedTime = 0f;
                 SpawnWallStack();
             }
-            await UniTask.Yield();
+            await UniTask.Yield(this.GetCancellationTokenOnDestroy());
         }
     }
 

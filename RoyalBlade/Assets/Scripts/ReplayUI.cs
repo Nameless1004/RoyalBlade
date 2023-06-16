@@ -13,7 +13,7 @@ public class ReplayUI : MonoBehaviour
 
     private void Awake()
     {
-        _replayButton = GetComponentInChildren<Button>();
+        _replayButton = GetComponentInChildren<Button>(true);
         _group = GetComponent<CanvasGroup>();
         _group.interactable = false;
         _group.blocksRaycasts = false;
@@ -35,7 +35,11 @@ public class ReplayUI : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
-    public async UniTask ShowReplayUI()
+    public void ShowReplayUI()
+    {
+        ShowReplayUITask().Forget();
+    }
+    public async UniTask ShowReplayUITask()
     {
         Time.timeScale = 0f;
         await FadeIn();

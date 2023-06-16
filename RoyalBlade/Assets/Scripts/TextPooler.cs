@@ -10,14 +10,16 @@ public class TextPooler : Singleton<TextPooler>
     private ObjectPool<DamageText> _pool;
     [SerializeField] private Canvas _canvas;
 
-    private Dictionary<int, string> _damageStrings;
-
+    private Dictionary<int, string> _damageIntToStrings;
+    private Dictionary<string, int> _damageStringToInt;
+    public Dictionary<string ,int> DamageStringToInt { get { return _damageStringToInt; } }
     protected override void Awake()
     {
         base.Awake();
         _origin = ResourceCache.GetResource<GameObject>(Path.Combine("Prefabs","DefaultDamageText"));
         _pool = new ObjectPool<DamageText>(CreateAction, GetAction, ReleaseAction, DestroyAction, true, 10, 100);
-        _damageStrings = new Dictionary<int, string>();
+        _damageIntToStrings = new Dictionary<int, string>();
+        _damageStringToInt = new Dictionary<string, int>();
     }
 
     private void OnEnable()
@@ -33,13 +35,9 @@ public class TextPooler : Singleton<TextPooler>
     private void OnSceneLoaded(Scene s, LoadSceneMode lm)
     {
         _origin = ResourceCache.GetResource<GameObject>(Path.Combine("Prefabs", "DefaultDamageText"));
-        _pool.Clear();
-        _pool.Dispose();
-        _pool = new ObjectPool<DamageText>(CreateAction, GetAction, ReleaseAction, DestroyAction, true, 10, 100);
-
-        for (int i = 0; i < _canvas.transform.childCount; ++i)
+        foreach(Transform child in _canvas.transform)
         {
-            Destroy(_canvas.transform.GetChild(i).gameObject);
+            child.gameObject.GetComponent<DamageText>().ChangedScene();
         }
     }
 
@@ -51,7 +49,7 @@ public class TextPooler : Singleton<TextPooler>
 
     private string GetDamageString(int damage)
     {
-        if (_damageStrings.TryGetValue(damage, out string str) == false)
+        if (_damageIntToStrings.TryGetValue(damage, out string str) == false)
         {
             if(damage == int.MaxValue)
             {
@@ -61,6 +59,8 @@ public class TextPooler : Singleton<TextPooler>
             {
                 str = damage.ToString();
             }
+
+            _damageStringToInt[str] = damage;
             return str;
         }
 
@@ -71,7 +71,7 @@ public class TextPooler : Singleton<TextPooler>
     public DamageText CreateAction()
     {
         var pooledObj = Instantiate(_origin, _canvas.transform).GetComponent<DamageText>();
-        pooledObj.SetOwner(_pool);
+        pooledObj.SetOwner(this, _pool);
         pooledObj.gameObject.SetActive(false);
         return pooledObj;
     }

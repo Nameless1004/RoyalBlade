@@ -14,6 +14,7 @@ public class Wall : MonoBehaviour, IDestroyable
 
     private Health _health;
 
+    private bool _isReleased;
     public event Action OnDestroyWall;
 
     public ObjectPool<Wall> OwnerPool;
@@ -38,6 +39,7 @@ public class Wall : MonoBehaviour, IDestroyable
         _health.OnHit += OnHit;
         _collider.enabled = true;
         _renderer.enabled = true;
+        _isReleased = false;
     }
 
     private void OnDisable()
@@ -48,12 +50,15 @@ public class Wall : MonoBehaviour, IDestroyable
 
     private void OnHit()
     {
+        if (_isReleased == true) return;
         _healthViewer.SetTargetObject(_health);
+        ComboCounter.AddCombo();
         SoundManager.Instance.EffectPlay("Hit", Vector3.zero);
     }
 
     public async void Destroy()
     {
+        if (_isReleased == true) return;
         _destroyParticle.Play();
         _collider.enabled = false;
         _renderer.enabled = false;
@@ -63,5 +68,6 @@ public class Wall : MonoBehaviour, IDestroyable
         if (this == null) return;
         OnDestroyWall?.Invoke();
         OwnerPool?.Release(this);
+        _isReleased = true;
     }
 }

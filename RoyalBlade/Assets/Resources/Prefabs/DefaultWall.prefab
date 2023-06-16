@@ -9880,4 +9880,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 951b18fbd991ab440b2afe2236163206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHp: 8
+  MaxHp: 13

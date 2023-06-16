@@ -27,6 +27,7 @@ public class PlayerLife : MonoBehaviour
             OnGroundCollided?.Invoke();
             CameraEffecter.Instance.PlayScreenBlink();
             CameraEffecter.Instance.PlayScreenShake(200, 1f);
+            ComboCounter.ResetCombo();
             if (CurretPlayerLifeCount == 0)
             {
                 OnPlayerDie?.Invoke();

@@ -21,7 +21,7 @@ public class PlayerLifePresenter : MonoBehaviour
 
     public void OnPlayerDie()
     {
-        ReplayUI.ShowReplayUI().Forget();
+        ReplayUI.ShowReplayUI();
     }
 
     public void OnModelUpdated(int lifeCount)

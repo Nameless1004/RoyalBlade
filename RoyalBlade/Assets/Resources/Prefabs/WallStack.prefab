@@ -68,8 +68,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: -5759076201129607554, guid: 58e679d6c7616f54f984f7e05a38587c, type: 3}
-  _wallCount: 5
+  _wallCount: 7
   _spawnDistInterval: 0
+  _minWallHealth: 11
+  _maxWallHealth: 17
 --- !u!210 &4665804335351608813
 SortingGroup:
   m_ObjectHideFlags: 0

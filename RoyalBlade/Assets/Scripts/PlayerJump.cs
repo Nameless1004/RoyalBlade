@@ -69,8 +69,8 @@ public class PlayerJump : MonoBehaviour
                 if(_rig2D.velocity.y <= 0)
                  _anim.SetBool(PlayerController.ID_IdleBoolean, true);
             }
+            SoundManager.Instance.EffectPlay("Land", Vector3.zero);
             _isJumping = false;
-
         }
         if (isGrounded == false)
         {
@@ -132,7 +132,7 @@ public class PlayerJump : MonoBehaviour
             if(_isUsingUlt == true)
             {
                 var damageable = hit.GetComponent<ITakeDamageable>();
-                damageable?.TakeDamage(9999);
+                damageable?.TakeDamage(int.MaxValue);
             }
             return true;
         }
@@ -143,6 +143,8 @@ public class PlayerJump : MonoBehaviour
     void UseUlt()
     {
         UltMode().Forget();
+        int dur = (int)(1000 * _ultModeTime);
+        CameraEffecter.Instance.PlayScreenShake(dur, 3f);
     }
 
     async UniTaskVoid UltMode()
@@ -156,7 +158,7 @@ public class PlayerJump : MonoBehaviour
             elapsedTime += Time.deltaTime;
             CollidedObstacle();
             _rig2D.velocity = new Vector2(0, 25f);
-            await UniTask.Yield();
+            await UniTask.Yield(this.GetCancellationTokenOnDestroy());
         }
         _isUsingUlt = false;
     }

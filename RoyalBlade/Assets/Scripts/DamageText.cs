@@ -1,12 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
-using System.Collections;
-using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Pool;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using static Unity.VisualScripting.Member;
 
 public class DamageText : MonoBehaviour
 {
@@ -15,37 +10,41 @@ public class DamageText : MonoBehaviour
     [SerializeField] private float _speed;
     [SerializeField] private Vector3 _defaultScale;
     [SerializeField] private Color _defaultColor;
+    [SerializeField] private Color _maxDamageColor;
 
-    private CancellationTokenSource source = new CancellationTokenSource();
-
+    private TextPooler _ownerObject;
     private ObjectPool<DamageText> _owner;
     private TMP_Text _text;
+
+    private bool _isReleased;
 
     public void Awake()
     {
         _text = GetComponent<TMP_Text>();
     }
 
-    private void OnEnable()
+    public void SetOwner(TextPooler ownerObj, ObjectPool<DamageText> owner) 
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        _owner = owner;
+        _ownerObject = ownerObj;
     }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    public void SetOwner(ObjectPool<DamageText> owner) => _owner = owner;
 
     public void SetUp(string damage, Vector2 startPosition)
     {
         _text.text = damage;
 
-        _text.color = _defaultColor;
+        if(_ownerObject.DamageStringToInt[damage] != int.MaxValue)
+        {
+            _text.color = _defaultColor;
+        }
+        else
+        {
+            _text.color = _maxDamageColor;
+        }
         _text.rectTransform.anchoredPosition = startPosition;
         _text.rectTransform.localScale = _defaultScale;
         DamageTextEffect().Forget();
+        _isReleased = false;
     }
 
     private async UniTaskVoid DamageTextEffect()
@@ -55,8 +54,6 @@ public class DamageText : MonoBehaviour
         float xVel = Random.Range(-1f, 1f);
         while (t < _lifeTime)
         {
-            if (source.IsCancellationRequested) return;
-            if (_text == null) break;
             t += Time.deltaTime;
             Vector2 moveVec = Vector2.up * (_speed * Time.deltaTime) + Vector2.right * (xVel * Time.deltaTime);
             _text.rectTransform.anchoredPosition += moveVec;
@@ -65,15 +62,25 @@ public class DamageText : MonoBehaviour
             col.a = alpha;
             _text.color = col;
 
-            await UniTask.Yield();
+            await UniTask.Yield(this.GetCancellationTokenOnDestroy());
         }
         transform.localScale = Vector3.one;
+        if (_isReleased == true)
+        {
+            return;
+        }
         _owner.Release(this);
+        _isReleased = true;
     }
 
-    void OnSceneLoaded(Scene s, LoadSceneMode lm)
+
+    public void ChangedScene()
     {
-        source.Cancel();
+        if(_isReleased == true )
+        {
+            return;
+        }
+        _owner.Release(this);
+        _isReleased = true;
     }
-
 }

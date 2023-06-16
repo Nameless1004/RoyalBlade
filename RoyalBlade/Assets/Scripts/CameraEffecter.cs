@@ -119,7 +119,7 @@ public class CameraEffecter : Singleton<CameraEffecter>
             float sinVal = Mathf.Sin(Mathf.Lerp(0, Mathf.PI, t / effectDuration));
             changeIntensity = Mathf.Clamp(sinVal, 0, caIntensity);
             _chromaticAberration.intensity.value = changeIntensity;
-            await UniTask.Yield();
+            await UniTask.Yield(this.GetCancellationTokenOnDestroy());
         }
         _chromaticAberration.intensity.value = 0;
     }
@@ -164,7 +164,7 @@ public class CameraEffecter : Singleton<CameraEffecter>
             // float sinVal = Mathf.Sin(Mathf.Lerp(0, Mathf.PI, t / duration));
             // currentIntensity = Mathf.Clamp(sinVal, 0, maxIntensity);
             // _vignette.intensity.value = currentIntensity;
-            await UniTask.Yield();
+            await UniTask.Yield(this.GetCancellationTokenOnDestroy());
         }
         _vignette.intensity.value = 0f;
 
@@ -197,7 +197,7 @@ public class CameraEffecter : Singleton<CameraEffecter>
             // float sinVal = Mathf.Sin(Mathf.Lerp(0, Mathf.PI, t / duration));
             // currentIntensity = Mathf.Clamp(sinVal, 0, maxIntensity);
             // _vignette.intensity.value = currentIntensity;
-            await UniTask.Yield();
+            await UniTask.Yield(this.GetCancellationTokenOnDestroy());
         }
         _vignette.intensity.value = 0f;
 

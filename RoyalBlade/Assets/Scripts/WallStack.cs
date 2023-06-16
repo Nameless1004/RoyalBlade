@@ -11,6 +11,9 @@ public class WallStack : MonoBehaviour, IKnockbackable
     [SerializeField] private int _wallCount;
     [SerializeField, Range(0, 2)] private float _spawnDistInterval;
 
+    [SerializeField] private int _minWallHealth;
+    [SerializeField] private int _maxWallHealth;
+
     private ObjectPool<Wall> _pool;
 
     public ObjectPool<WallStack> Owner;
@@ -69,6 +72,8 @@ public class WallStack : MonoBehaviour, IKnockbackable
     public void OnGet(Wall wall)
     {
         wall.gameObject.SetActive(true);
+        int hp = Random.Range(_minWallHealth, _maxWallHealth + 1);
+        wall.GetComponent<Health>().SetMaxHp(hp);
     }
 
     public void OnRelease(Wall wall)

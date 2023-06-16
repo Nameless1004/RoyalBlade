@@ -63,7 +63,7 @@ MonoBehaviour:
   _speed: 1.5
   _defaultScale: {x: 1, y: 1, z: 1}
   _defaultColor: {r: 1, g: 0.6227338, b: 0.4009434, a: 1}
-  _criticalColor: {r: 1, g: 0.87879086, b: 0, a: 1}
+  _maxDamageColor: {r: 0.9433962, g: 0.8629262, b: 0.19134924, a: 0}
 --- !u!114 &4372295382465577685
 MonoBehaviour:
   m_ObjectHideFlags: 0
