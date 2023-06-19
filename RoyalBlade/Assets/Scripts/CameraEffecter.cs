@@ -92,11 +92,15 @@ public class CameraEffecter : Singleton<CameraEffecter>
         ShakeScreenEffectTask().Forget();
     }
 
+    float prevIntensity;
     async UniTaskVoid ShakeScreenEffectTask()
     {
-        _cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = _cameraShakeIntensity;
+        _cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = prevIntensity = _cameraShakeIntensity;
         await UniTask.Delay(_cameraShakeDuration, true);
-        _cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = 0f;
+        if(prevIntensity == _cameraShakeIntensity)
+        {
+            _cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = 0f;
+        }
     }
     #endregion
 

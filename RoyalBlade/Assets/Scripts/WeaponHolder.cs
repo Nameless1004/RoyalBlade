@@ -3,15 +3,15 @@ using UnityEngine;
 public class WeaponHolder : MonoBehaviour
 {
     public PlayerController Owner;
-    public WeaponBase _currentWeapon;
-    public WeaponData _currentWeaponData;
+    private WeaponBase _currentWeapon;
+    private WeaponData _currentWeaponData;
 
     private void Awake()
     {
         Owner = GetComponentInParent<PlayerController>();
         if(_currentWeapon == null)
         {
-            EquipWeapon(Instantiate(Resources.Load<WeaponBase>("Sword"), transform));
+            EquipWeapon(Instantiate(ResourceCache.GetResource<WeaponBase>("Sword"), transform));
         }
     }
 
