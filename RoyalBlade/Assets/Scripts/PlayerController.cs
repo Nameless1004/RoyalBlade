@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     public static readonly int ID_IdleBoolean = Animator.StringToHash("Idle");
 
     public BoxCollider2D _collider;
-    private PlayerUlt _playerUlt;
+    private Skill _playerUlt;
     private PlayerGuard _guardState;
     public PlayerGuard GuardState { get { return _guardState; } }
 
@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
         _collider = GetComponent<BoxCollider2D>();
         _attackInput = FindObjectOfType<AttackInput>();
         _guardState = GetComponent<PlayerGuard>();
-        _playerUlt = GetComponent<PlayerUlt>();
+        _playerUlt = GetComponent<Skill>();
     }
    
     private void OnEnable()

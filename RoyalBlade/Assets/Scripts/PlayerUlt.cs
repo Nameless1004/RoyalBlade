@@ -1,6 +1,5 @@
 using Cysharp.Threading.Tasks;
 using System.IO;
-using System.Linq;
 using UnityEngine;
 
 public class PlayerUlt : Skill
@@ -35,6 +34,7 @@ public class PlayerUlt : Skill
             await UniTask.Delay(500);
         }
     }
+
     private void Awake()
     {
         SkillDamage = int.MaxValue;
@@ -49,3 +49,6 @@ public class PlayerUlt : Skill
         }
     }
 }
+
+
+

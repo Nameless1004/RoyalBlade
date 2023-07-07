@@ -6,3 +6,7 @@ public abstract class Skill : MonoBehaviour, IUseable
 
     public abstract void Use();
 }
+
+
+
+
